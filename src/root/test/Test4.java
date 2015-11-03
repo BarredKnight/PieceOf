@@ -12,17 +12,18 @@ import java.io.IOException;
 public class Test4 {
     final static String userLogin = "maksimenko.natal@yandex.ru";
     final static String username = "maksimenko-natal";
-    final static String password = "";  // deleted
+    final static String password = "through all this shit";  // deleted
     final static String localFile = "/home/andrew/ForTests/fromGit.txt";
     static GHRepository repo;
     static GHContent content;
 
     public static void main(String[] args) throws IOException {
-        GitHub github = GitHub.connectUsingOAuth("");   // deleted
+        GitHub github = GitHub.connectUsingPassword(userLogin, password);  // deleted
         repo = github.getRepository(username + "/new-repository-1");
 
 
-        repo.createContent("smthingNew.txt", "Got it", "test-folder-1");
+        repo.createContent("smthingNew.jpg", "Got it", username + "/test-folder-1");
+
 
 
 

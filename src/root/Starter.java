@@ -17,7 +17,7 @@ public class Starter {
     final static String userLogin = "maksimenko.natal@yandex.ru";
     final static String username = "maksimenko-natal";
     static String password;
-    final static MyConfig config = new MyConfig("", "", "", "/home/andrew/ForTests");
+    final static MyConfig config = new MyConfig("", "", "", "/home/andrew/ForTests", "");
     static GHRepository repo;
 
 
@@ -35,9 +35,9 @@ public class Starter {
         GitHub github = GitHub.connectUsingPassword(userLogin, password);
         System.out.println(github.isCredentialValid());
         repo = github.getRepository(username + "/new-repository-1");
-        MyConfig config = new MyConfig("", "", "", "/home/me/");
+        MyConfig config = new MyConfig("", "", "", "/home/me/", "");
 
-        for (String s : TreeHelper.fromGHTree(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree(), repo.getName(), config.wayToRepo)){
+        for (String s : TreeHelper.fromGHTree(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree(), repo.getName(), config.wayToRepos)){
             System.out.println(s);
         }
     }   //OK
@@ -45,12 +45,12 @@ public class Starter {
     private static void testFromArrayToArrayList() throws IOException {
         GitHub github = GitHub.connectUsingPassword(userLogin, password);
         repo = github.getRepository(username + "/new-repository-1");
-        MyConfig config = new MyConfig("", "", "", "/home/andrew/ForTests/");
+        MyConfig config = new MyConfig("", "", "", "/home/andrew/ForTests/", "");
 
-        File destination = new File(config.wayToRepo + repo.getName());
+        File destination = new File(config.wayToRepos + repo.getName());
         System.out.println(destination.getPath());
         System.out.println(destination.isDirectory());
-        for (String s : TreeHelper.fromArray(destination.listFiles(), repo.getName(), config.wayToRepo)){
+        for (String s : TreeHelper.fromArray(destination.listFiles(), repo.getName(), config.wayToRepos)){
             System.out.println(s);
         }
     }   //Seems ok
@@ -61,10 +61,10 @@ public class Starter {
             repo = github.getRepository(username + "/new-repository-1");
 
             GHTree tree = repo.getTreeRecursive(repo.getDefaultBranch(), 1);
-            ArrayList<String> hubTree = TreeHelper.fromGHTree(tree.getTree(), repo.getName(), config.wayToRepo);
+            ArrayList<String> hubTree = TreeHelper.fromGHTree(tree.getTree(), repo.getName(), config.wayToRepos);
 
-            File pointToRepo = new File(config.wayToRepo + "/" +repo.getName());
-            ArrayList<String> localTree = TreeHelper.fromArray(pointToRepo.listFiles(), repo.getName(), config.wayToRepo);
+            File pointToRepo = new File(config.wayToRepos + "/" +repo.getName());
+            ArrayList<String> localTree = TreeHelper.fromArray(pointToRepo.listFiles(), repo.getName(), config.wayToRepos);
 
             //Printing
             for (String s : hubTree) {
@@ -90,7 +90,7 @@ public class Starter {
 
         GitHub github = GitHub.connectUsingPassword(userLogin, password);
         repo = github.getRepository(username + "/new-repository-1");
-        MyConfig config = new MyConfig("", "", "", "/home/andrew/ForTests");
+        MyConfig config = new MyConfig("", "", "", "/home/andrew/ForTests", "");
 
         Downloader downloader = new Downloader(config, repo);
         downloader.download();

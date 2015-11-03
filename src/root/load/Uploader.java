@@ -1,12 +1,15 @@
 package root.load;
 
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 import root.MyConfig;
 import root.utils.CompareHelper;
 import root.utils.TreeHelper;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 
 public class Uploader {
@@ -22,18 +25,53 @@ public class Uploader {
     public void upload() throws IOException {
         final ArrayList<String> localTree;
         final ArrayList<String> gitTree;
-        localTree = TreeHelper.fromArray((new File(config.wayToRepo + repo.getName())).listFiles(), repo.getName(), config.wayToRepo);
-        gitTree = TreeHelper.fromGHTree(repo.getTreeRecursive("/", 1).getTree(), repo.getName(), config.wayToRepo);
+        final ArrayList<String> filesFromLocalTree;
+        localTree = TreeHelper.fromArray((new File(config.wayToRepos + "/" + repo.getName())).listFiles(), repo.getName(), config.wayToRepos);
+        filesFromLocalTree = TreeHelper.getOnlyFiles(localTree);
+        gitTree = TreeHelper.fromGHTree(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree(), repo.getName(), config.wayToRepos);
 
-        ArrayList<String> toCreate = CompareHelper.getMissed(localTree, gitTree);
 
+        ArrayList<String> toCreate = CompareHelper.getMissed(filesFromLocalTree, gitTree);
+        createFiles(toCreate);
+
+        ArrayList<String> toUpload = TreeHelper.getOnlyFiles(localTree);
+        upload(toUpload);
     }
 
-    private void createFiles(ArrayList<String> toLoad){ //They're getting sorted
-        for (String string : toLoad){
+
+    // without spaces
+    private void createFiles(ArrayList<String> fullWays){ //They're getting sorted
+        for (String fullWay : fullWays){
+            String name = TreeHelper.getName(fullWay);
+            String innerPath = TreeHelper.getInnerPath(fullWay, config.wayToRepos, repo.getName());
+            try {
+                if (innerPath.equals(""))
+                repo.createContent("", "new", innerPath + "" + name);
+                else
+                    repo.createContent("", "new", innerPath + "/" + name);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }   // Need to be tested
+
+    private void upload(ArrayList<String> toBeUploaded) throws IOException {
+        // there
+
+        for (String path : toBeUploaded) {
+
+                String gitPath = TreeHelper.getInnerPath(path, config.wayToRepos, repo.getName()) + "/" + TreeHelper.getName(path);
+                byte[] bytes;
+                InputStream input = new FileInputStream(path);
+                bytes = new byte[input.available()];
+                input.read(bytes);
+
+                repo.getFileContent(gitPath).update(bytes, "atop");
+
 
         }
-    }
+    }   // Should be
 
 
 }

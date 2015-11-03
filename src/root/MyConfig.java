@@ -1,13 +1,20 @@
 package root;
 
-public class MyConfig {
+import org.kohsuke.github.GHRepository;
 
-    public final String userLogin, username, token, wayToRepo;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    public MyConfig(final String userLogin, final String username, final String token, final String wayToRepo){
+public class MyConfig implements Serializable {
+
+    public String userLogin, username, token, wayToRepos, password;
+    public ArrayList<String> openedRepos;
+
+    public MyConfig(final String userLogin, final String username, final String token, final String wayToRepos, final String password){
         this.userLogin = userLogin;
         this.username = username;
         this.token = token;
-        this.wayToRepo = wayToRepo;
+        this.wayToRepos = wayToRepos;
+        this.password = password;
     }
 }

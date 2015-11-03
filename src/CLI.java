@@ -2,10 +2,13 @@ import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.kohsuke.github.GHRepository;
 import root.MyConfig;
+import root.load.RepoMaster;
 import root.utils.ConfigCarer;
 import root.utils.TreeHelper;
 import view.Preconfigurator;
@@ -48,11 +51,37 @@ public class CLI extends Application{
 
         // and another
         layout.setOrientation(Orientation.HORIZONTAL);
-        HBox hBox = new HBox(new Button("New local"), new Button("Open local"));
+
+        GridPane pan = new GridPane();
+
+        // making buttons
+        Button newButton = new Button("New");
+        Button newLocalButton = new Button("New local");
+        Button openButton = new Button("Open");
+        Button downButton = new Button("Download");
+        Button upButton = new Button("Upload");
+        Label statusLabel = new Label("...");
+
+
+        newLocalButton.setOnAction( e ->{
+
+        };
+        newButton.setOnAction( e -> {
+
+//            GHRepository createdRepo = RepoMaster.createRepo()
+        });
+
+        upButton.setOnAction( e -> {
+
+        };
+
+        HBox hBox = new HBox(new Button("New local"), new Button("Open local"), new Button("Download"));
         layout.getItems().addAll(tabPane, new VBox(hBox, new Button("Upload"), new Label("here")));
 
         Scene scene = new Scene(layout, 300, 250);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+
 }

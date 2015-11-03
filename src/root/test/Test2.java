@@ -16,17 +16,9 @@ public class Test2 {
         GitHub github = GitHub.connectUsingPassword(userLogin, password);
         System.out.println(github.isCredentialValid());
         repo = github.getRepository(username + "/new-repository-1");
-//        File localFile = new File(localPath);
-//        localFile.delete();
-//        Git.cloneRepository().setURI(remotePath)
-//                .setDirectory(localFile)
-//                .setNoCheckout(true)
-//                .call();
-//
 
-        String localFile = "/home/andrew/Pictures/Nuclear_Boom";
+        String localFile = "/home/andrew/ForTests/new-repository-1/test-folder-2/data.txt";
 
-        GHContent gitContent= repo.getFileContent("/root.test-folder-2/data.txt");
 
 
         byte[] bytes;
@@ -34,10 +26,8 @@ public class Test2 {
         bytes = new byte[input.available()];
         input.read(bytes);
 
-        repo.getFileContent("root.test-folder-2/Bada-boom.jpg").update(bytes, "atop");
+        repo.getFileContent("test-folder-2/data.txt").update(bytes, "atop");
 
 
-//        System.out.println(bytes);
-//        gitContent.update(bytes, "Bytes!");
     }
 }
