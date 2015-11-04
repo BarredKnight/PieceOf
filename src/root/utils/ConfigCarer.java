@@ -44,10 +44,11 @@ public class ConfigCarer {
         }
         String jarDir = jarFile.getParentFile().getPath();
         try {
-            if (!(new File(jarDir + "temp.oup").exists())){
+            if (!(new File(jarDir + "/" + "config.out").exists())){
                 return new MyConfig(null, null, null, null, null);
             }
-            FileInputStream fis = new FileInputStream(jarDir + "temp.out");
+            System.out.println("config exist");
+            FileInputStream fis = new FileInputStream(jarDir + "/" + "config.out");
             ObjectInputStream oin = new ObjectInputStream(fis);
             return (MyConfig)oin.readObject();
         }catch (Exception e){

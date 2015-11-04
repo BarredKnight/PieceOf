@@ -13,7 +13,7 @@ import java.io.IOException;
 public class RepoMaster {
 
     public static GHRepository createRepo(String repoName, GitHub github, MyConfig config) throws IOException {
-        String localWay = config.wayToRepos + repoName;
+        String localWay = config.wayToRepos + "/" + repoName;
 
         File file = new File(localWay);
         file.mkdir();

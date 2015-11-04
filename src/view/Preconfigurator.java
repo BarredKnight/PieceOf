@@ -6,24 +6,29 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kohsuke.github.GitHub;
 import root.MyConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Preconfigurator {
 
     public static boolean preconfigure(MyConfig config){
         choosePlaceForRepos(config);
         enterLoginAndPass(config);
+        setUsername(config);
+        setEmptyToken(config);
+        config.openedRepos = new ArrayList<>();
 
         return true;
     }   // OK
 
     public static boolean lazyCheck(MyConfig config){
-        if (config.userLogin == null || config.password == null || config.username == null || config.wayToRepos == null){
+        if (config.openedRepos == null || config.userLogin == null || config.password == null || config.username == null || config.wayToRepos == null){
             return false;
         }
         return true;
@@ -37,6 +42,7 @@ public class Preconfigurator {
 
     private static void enterLoginAndPass(MyConfig config){
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
         Scene scene;
 
         TextField loginField = new TextField();
@@ -64,7 +70,7 @@ public class Preconfigurator {
         VBox vBox = new VBox(new Label("Login:"), loginField, new Label("Password:"), passField, buttonA, status);
         scene = new Scene(vBox);
         stage.setScene(scene);
-        stage.show();
+        stage.showAndWait();
     }   // OK
 
     private static void setUsername(MyConfig config){
@@ -77,4 +83,8 @@ public class Preconfigurator {
         }
 
     }    // OK
+
+    private static void setEmptyToken(MyConfig config){
+        config.token = "";
+    }
 }
