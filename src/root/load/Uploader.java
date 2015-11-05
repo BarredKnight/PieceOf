@@ -1,15 +1,13 @@
 package root.load;
 
 import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GHTreeEntry;
+import root.CLI;
 import root.MyConfig;
 import root.utils.CompareHelper;
 import root.utils.TreeHelper;
 
 import java.io.*;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 
 public class Uploader {
@@ -22,7 +20,7 @@ public class Uploader {
             this.repo = repo;
         }
 
-    public void upload() throws IOException {
+    public void uploadSoft() throws IOException {
         final ArrayList<String> localTree;
         final ArrayList<String> gitTree;
         final ArrayList<String> filesFromLocalTree;
@@ -37,6 +35,27 @@ public class Uploader {
         ArrayList<String> toUpload = TreeHelper.getOnlyFiles(localTree);
         upload(toUpload);
     }
+
+    public void uploadRude() throws IOException {
+        final ArrayList<String> localTree;
+        final ArrayList<String> gitTree;
+        final ArrayList<String> filesFromLocalTree;
+        final ArrayList<String> additionalFilesInHub;
+        localTree = TreeHelper.fromArray((new File(config.wayToRepos + "/" + repo.getName())).listFiles(), repo.getName(), config.wayToRepos);
+        filesFromLocalTree = TreeHelper.getOnlyFiles(localTree);
+        gitTree = TreeHelper.fromGHTree(TreeHelper.getOnlyFilesFromHub(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree()), repo.getName(), config.wayToRepos);
+
+        additionalFilesInHub = CompareHelper.getMissed(gitTree, filesFromLocalTree);    //will there be directories?
+
+        deleteFiles(additionalFilesInHub);
+
+        ArrayList<String> toCreate = CompareHelper.getMissed(filesFromLocalTree, gitTree);
+        createFiles(toCreate);
+
+        ArrayList<String> toUpload = TreeHelper.getOnlyFiles(localTree);
+        upload(toUpload);
+    }
+
 
 
     // without spaces
@@ -55,6 +74,27 @@ public class Uploader {
             }
         }
     }   // Need to be tested
+
+    private void deleteFiles(ArrayList<String> fullWays){
+        for (String fullWay : fullWays){
+            String name = TreeHelper.getName(fullWay);
+            String innerPath = TreeHelper.getInnerPath(fullWay, config.wayToRepos, repo.getName());
+
+                if (innerPath.equals("")) {
+                    try {
+                        repo.getFileContent(innerPath + "" + name).delete("deleted");
+                    } catch (IOException e) {
+                        CLI.refreshMainStage("OnO >Seems that there was unexpected error during deleting files. Try later");
+                    }
+                } else {
+                    try {
+                        repo.getFileContent(innerPath + "/" + name).delete("deleted");
+                    } catch (IOException e) {
+                        CLI.refreshMainStage("OnO >Seems that there was unexpected error during deleting files. Try later");
+                    }
+                }
+        }
+    }
 
     private void upload(ArrayList<String> toBeUploaded) throws IOException {
         // there

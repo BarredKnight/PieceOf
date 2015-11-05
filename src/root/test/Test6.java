@@ -5,11 +5,8 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import root.MyConfig;
 import root.load.Uploader;
-import root.utils.TreeHelper;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by andrew on 11/2/15.
@@ -31,6 +28,6 @@ public class Test6 {
             GHRepository repo = hub.getRepository(username + "/" +repoName);
 
             Uploader uploader = new Uploader(config, repo);
-            uploader.upload();
+            uploader.uploadSoft();
     }
 }

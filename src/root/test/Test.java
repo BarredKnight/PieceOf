@@ -7,8 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import root.MyConfig;
-import root.utils.TreeHelper;
-import view.Preconfigurator;
+import root.utils.ViewHelper;
+import root.view.Preconfigurator;
 
 public class Test extends Application {
     TreeView<Button> tree;
@@ -21,7 +21,7 @@ public class Test extends Application {
 
         //layout
         /////////////////
-        TreeView<Button> treeView = TreeHelper.getButtonTree("/home/andrew/ForTests", "new-repository-1");
+        TreeView<Button> treeView = ViewHelper.getButtonTree("/home/andrew/ForTests", "new-repository-1");
 
         SplitPane layout = new SplitPane();
 

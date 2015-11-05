@@ -1,4 +1,4 @@
-package view;
+package root.view;
 
 /**
  * Created by andrew on 10/28/15.

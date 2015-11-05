@@ -1,4 +1,4 @@
-package view;
+package root.view;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 public class InputDialog {  // make title for it
     static String result;
 
-    public static String call(){
+    public static String call(String title){
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -24,6 +24,7 @@ public class InputDialog {  // make title for it
 
         Scene scene = new Scene(layout);
         stage.setScene(scene);
+        stage.setTitle(title);
 
 
 

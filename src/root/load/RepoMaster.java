@@ -17,7 +17,9 @@ public class RepoMaster {
 
         File file = new File(localWay);
         file.mkdir();
-        return github.createRepository(repoName, "", "", true);
+        GHRepository repo= github.createRepository(repoName, "", "", true);
+        repo.createContent("I'm just a file with info, don't hurt me, I'll do whatever you say!", "Init commit", "about.txt");
+        return repo;
     }
 
     public static void createLocal(String repoName, MyConfig config){

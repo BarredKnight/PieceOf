@@ -4,12 +4,8 @@ import root.MyConfig;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.security.CodeSource;
 
-/**
- * Created by andrew on 11/1/15.
- */
 public class ConfigCarer {
 
     public static boolean saveConf(MyConfig config) throws UnsupportedEncodingException {

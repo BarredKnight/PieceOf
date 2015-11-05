@@ -2,7 +2,6 @@ package root.utils;
 
 import javafx.scene.control.*;
 import org.kohsuke.github.GHTreeEntry;
-import view.MyItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,54 +18,19 @@ public class TreeHelper {
         return outputArray;
     } //OK
 
+    public static ArrayList<GHTreeEntry> getOnlyFilesFromHub(List<GHTreeEntry> entries){
+        ArrayList<GHTreeEntry> out = new ArrayList<>();
+        for (GHTreeEntry entry : entries){
+            if (!entry.getType().equals("tree"))
+                out.add(entry);
+        }
+        return out;
+    }
+
     public static ArrayList<String> fromArray(File[] files, String repoName, String localWay){
         ArrayList<String> output = new ArrayList<>();
         writeItAndGiveFurther(files, output);
         return output;
-    }
-
-    public static TreeView<Button> getButtonTree (String localWay, String repoName){
-        File repoFolder = new File(localWay + "/" + repoName);
-        ArrayList<String> paths = fromArray(repoFolder.listFiles(), repoName, localWay);
-        TreeView<Button> output;
-        TreeItem<Button> root = new TreeItem<>();
-
-        makeUpNodeOfTreeAndGiveFurther(repoFolder.listFiles(), root);
-        output = new TreeView<>(root);
-        return output;
-        }
-
-    public static ArrayList<String> waysFromRepoToFileExclusive(ArrayList<String> fullWays, String localWay, String repoName){
-        int size = localWay.length() + repoName.length() + 2;
-        ArrayList<String> out= new ArrayList<String>();
-
-        for (String string : fullWays){
-            int sizeOfName = (new File(string)).getName().length();
-            int outSubstringPoint = string.length() - sizeOfName + 1;
-
-            try {
-                out.add(string.substring(size, outSubstringPoint - 2));
-            }catch (StringIndexOutOfBoundsException e){
-                out.add(string.substring(size, outSubstringPoint - 1));
-            }
-        }
-        return out;
-    }   // OK
-
-    public static String getInnerPath(String fullPath, String localWay, String repoName){
-        int size = localWay.length() + repoName.length() + 2;
-        String outString;
-
-            int sizeOfName = (new File(fullPath)).getName().length();
-            int outSubstringPoint = fullPath.length() - sizeOfName + 1;
-
-            try {
-                outString = fullPath.substring(size, outSubstringPoint - 2);
-            }catch (StringIndexOutOfBoundsException e){
-                outString = fullPath.substring(size, outSubstringPoint - 1);
-            }
-
-        return outString;
     }
 
     public static ArrayList<String> getNames(ArrayList<String> fullWays){
@@ -87,11 +51,31 @@ public class TreeHelper {
             }
         }
         return output;
+    }   // for local only
+
+    public static String getInnerPath(String fullPath, String localWay, String repoName){
+        int size = localWay.length() + repoName.length() + 2;
+        String outString;
+
+        int sizeOfName = (new File(fullPath)).getName().length();
+        int outSubstringPoint = fullPath.length() - sizeOfName + 1;
+
+        try {
+            outString = fullPath.substring(size, outSubstringPoint - 2);
+        }catch (StringIndexOutOfBoundsException e){
+            outString = fullPath.substring(size, outSubstringPoint - 1);
+        }
+
+        return outString;
     }
+
     public static String getName(String fullWay){
             File file = new File(fullWay);
             return file.getName();
     }
+
+
+
 
     private static void writeItAndGiveFurther(File[] filesToWrite, ArrayList<String> filesForWrite){
         for (File file: filesToWrite){
@@ -101,23 +85,6 @@ public class TreeHelper {
         }
 
 
-    }
-
-    private static void makeUpNodeOfTreeAndGiveFurther(File[] filesForMakeUp, TreeItem<Button> task){
-        for (File file: filesForMakeUp){
-            Button button;
-            if (file.isDirectory()){
-                button = new Button(file.getName() + "/");
-            }else{
-                button = new Button(file.getName());
-            }
-            TreeItem<Button> item = new TreeItem<>(button); //
-            item.setExpanded(true);
-            task.getChildren().add(item);
-
-            if (file.listFiles() != null)
-                makeUpNodeOfTreeAndGiveFurther(file.listFiles(), item);
-        }
     }
 
     private static GHTreeEntry getNeededEntry(List<GHTreeEntry> tree, String pathToFind, String pathToLocal, String repoName){

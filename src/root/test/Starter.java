@@ -1,9 +1,10 @@
-package root;
+package root.test;
 
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTree;
 import org.kohsuke.github.GitHub;
+import root.MyConfig;
 import root.load.Downloader;
 import root.utils.CompareHelper;
 import root.utils.TreeHelper;

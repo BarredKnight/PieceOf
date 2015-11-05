@@ -1,11 +1,13 @@
 package root.utils;
 
+import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTreeEntry;
 import root.MyConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MixHelper {
 
@@ -21,4 +23,8 @@ public class MixHelper {
         }
         return out;
     }
+
+    public static List<GHContent> getHubRepoContent(GHRepository repo) throws IOException {
+        return repo.getDirectoryContent("");
+    }   //not sure
 }
