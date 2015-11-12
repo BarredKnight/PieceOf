@@ -27,7 +27,7 @@ public class TreeHelper {
         return out;
     }
 
-    public static ArrayList<String> fromArray(File[] files, String repoName, String localWay){
+    public static ArrayList<String> fromArray(File[] files){
         ArrayList<String> output = new ArrayList<>();
         writeItAndGiveFurther(files, output);
         return output;

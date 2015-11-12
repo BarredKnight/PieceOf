@@ -1,12 +1,28 @@
 package root.utils;
 
+import root.CLI;
 import root.MyConfig;
+import root.view.Preconfigurator;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
 
 public class ConfigCarer {
+
+    public static MyConfig giveMeMyFuckingConfig(){
+        MyConfig config = ConfigCarer.loadConf();
+        if (!Preconfigurator.lazyCheck(config)) {
+            Preconfigurator.preconfigure(config);
+            try {
+                ConfigCarer.saveConf(config);
+            } catch (UnsupportedEncodingException e) {
+                CLI.printIntoConsole("Exception while saving config");
+                CLI.refreshMainStageWithExplanation(e, true, "Saving config");
+            }
+        }
+        return config;
+    }
 
     public static boolean saveConf(MyConfig config) throws UnsupportedEncodingException {
         CodeSource codeSource = ConfigCarer.class.getProtectionDomain().getCodeSource();

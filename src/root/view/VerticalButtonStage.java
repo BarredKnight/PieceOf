@@ -51,4 +51,25 @@ public class VerticalButtonStage {
         }
         call(stage, title, buttons);
     }
+
+    public static void giveMeButtonsForExtract(){
+        Stage stage = new Stage();
+        Button extrFileButton = new Button("File");
+        Button extrDirButton = new Button("Directory");
+
+        extrFileButton.setOnAction( e -> {
+            ExtractStage.callForFile();
+            stage.close();
+        });
+        extrDirButton.setOnAction( e-> {
+            ExtractStage.callForDir();
+            stage.close();
+        });
+
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(extrFileButton);
+        buttons.add(extrDirButton);
+        call(stage, "What we're extracting ?", buttons);
+    }
+
 }

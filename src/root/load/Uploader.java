@@ -1,5 +1,6 @@
 package root.load;
 
+import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTreeEntry;
 import root.CLI;
@@ -24,7 +25,7 @@ public class Uploader {
         final ArrayList<String> localTree;
         final ArrayList<String> gitTree;
         final ArrayList<String> filesFromLocalTree;
-        localTree = TreeHelper.fromArray((new File(config.wayToRepos + "/" + repo.getName())).listFiles(), repo.getName(), config.wayToRepos);
+        localTree = TreeHelper.fromArray((new File(config.wayToRepos + "/" + repo.getName())).listFiles());
         filesFromLocalTree = TreeHelper.getOnlyFiles(localTree);
         gitTree = TreeHelper.fromGHTree(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree(), repo.getName(), config.wayToRepos);
 
@@ -41,7 +42,7 @@ public class Uploader {
         final ArrayList<String> gitTree;
         final ArrayList<String> filesFromLocalTree;
         final ArrayList<String> additionalFilesInHub;
-        localTree = TreeHelper.fromArray((new File(config.wayToRepos + "/" + repo.getName())).listFiles(), repo.getName(), config.wayToRepos);
+        localTree = TreeHelper.fromArray((new File(config.wayToRepos + "/" + repo.getName())).listFiles());
         filesFromLocalTree = TreeHelper.getOnlyFiles(localTree);
         gitTree = TreeHelper.fromGHTree(TreeHelper.getOnlyFilesFromHub(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree()), repo.getName(), config.wayToRepos);
 
@@ -84,12 +85,21 @@ public class Uploader {
                     try {
                         repo.getFileContent(innerPath + "" + name).delete("deleted");
                     } catch (IOException e) {
+                        if (CLI.consoleLog)
+                            System.out.println("Error while getting or deleting " + name + ".");
+                        if (CLI.consoleExcep)
+                            e.printStackTrace();
                         CLI.refreshMainStage("OnO >Seems that there was unexpected error during deleting files. Try later");
+
                     }
                 } else {
                     try {
                         repo.getFileContent(innerPath + "/" + name).delete("deleted");
                     } catch (IOException e) {
+                        if (CLI.consoleLog)
+                            System.out.println("Error while getting or deleting " + name + ".");
+                        if (CLI.consoleExcep)
+                            e.printStackTrace();
                         CLI.refreshMainStage("OnO >Seems that there was unexpected error during deleting files. Try later");
                     }
                 }
@@ -97,8 +107,6 @@ public class Uploader {
     }
 
     private void upload(ArrayList<String> toBeUploaded) throws IOException {
-        // there
-
         for (String path : toBeUploaded) {
 
                 String gitPath = TreeHelper.getInnerPath(path, config.wayToRepos, repo.getName()) + "/" + TreeHelper.getName(path);
@@ -106,9 +114,21 @@ public class Uploader {
                 InputStream input = new FileInputStream(path);
                 bytes = new byte[input.available()];
                 input.read(bytes);
-
-                repo.getFileContent(gitPath).update(bytes, "atop");
-
+            try {
+                GHContent content = repo.getFileContent(gitPath);
+                content.update(bytes, "atop");
+            }
+            catch (IOException e){
+                if (CLI.consoleLog)
+                System.out.println("File "  + TreeHelper.getName(path) + " more than 1MB. Can't do anything with it.");
+                if (CLI.consoleExcep)
+                    e.printStackTrace();
+            }catch (OutOfMemoryError e){
+                if (CLI.consoleLog)
+                    System.out.println("File " + TreeHelper.getName(path) + "is really big. Can't upload it.");
+                if (CLI.consoleExcep)
+                    e.printStackTrace();
+            }
 
         }
     }   // Should be

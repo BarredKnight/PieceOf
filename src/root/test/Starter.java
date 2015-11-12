@@ -51,7 +51,7 @@ public class Starter {
         File destination = new File(config.wayToRepos + repo.getName());
         System.out.println(destination.getPath());
         System.out.println(destination.isDirectory());
-        for (String s : TreeHelper.fromArray(destination.listFiles(), repo.getName(), config.wayToRepos)){
+        for (String s : TreeHelper.fromArray(destination.listFiles())){
             System.out.println(s);
         }
     }   //Seems ok
@@ -65,7 +65,7 @@ public class Starter {
             ArrayList<String> hubTree = TreeHelper.fromGHTree(tree.getTree(), repo.getName(), config.wayToRepos);
 
             File pointToRepo = new File(config.wayToRepos + "/" +repo.getName());
-            ArrayList<String> localTree = TreeHelper.fromArray(pointToRepo.listFiles(), repo.getName(), config.wayToRepos);
+            ArrayList<String> localTree = TreeHelper.fromArray(pointToRepo.listFiles());
 
             //Printing
             for (String s : hubTree) {

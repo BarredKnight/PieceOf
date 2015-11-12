@@ -29,7 +29,7 @@ public class ViewHelper {
 
     public static TreeView<Button> getButtonTree (String localWay, String repoName){
         File repoFolder = new File(localWay + "/" + repoName);
-        ArrayList<String> paths = TreeHelper.fromArray(repoFolder.listFiles(), repoName, localWay);
+        ArrayList<String> paths = TreeHelper.fromArray(repoFolder.listFiles());
         TreeView<Button> output;
         TreeItem<Button> root = new TreeItem<>();
 

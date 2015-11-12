@@ -26,7 +26,7 @@ public class Downloader {
         ArrayList<String> converted;
         //local tree
         File[] localFiles = (new File(config.wayToRepos + "/" + repo.getName()).listFiles());
-        ArrayList<String> localTree = TreeHelper.fromArray(localFiles, repo.getName(), config.wayToRepos);
+        ArrayList<String> localTree = TreeHelper.fromArray(localFiles);
         //hub tree
         ArrayList<String> hubTree = TreeHelper.fromGHTree(repo.getTreeRecursive(repo.getDefaultBranch(), 1).getTree(), repo.getName(), config.wayToRepos);
         //missed

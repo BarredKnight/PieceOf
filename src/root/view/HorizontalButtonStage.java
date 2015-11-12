@@ -43,9 +43,10 @@ public class HorizontalButtonStage {
         softUploadButton.setOnAction( e -> {
             try {
                 uploader.uploadSoft();
-                CLI.statusLabel.setText("o.o >Upload just completed");
+                CLI.printIntoGUI("o.o >Upload just completed.");
             } catch (IOException e1) {
-                CLI.refreshMainStageWithExplanation();
+                CLI.printIntoConsole("Error while soft uploading.");
+                CLI.refreshMainStageWithExplanation(e1, true, "Upload");
             }
             stage.close();
 
@@ -53,9 +54,10 @@ public class HorizontalButtonStage {
         rudeUploadButton.setOnAction( e -> {
             try {
                 uploader.uploadRude();
-                CLI.statusLabel.setText("o.o >Upload with deleting completed");
+                CLI.printIntoGUI("o.o >Upload with deleting completed.");
             } catch (IOException e1) {
-                e1.printStackTrace();
+                CLI.printIntoConsole("Error while rude upload");
+                CLI.refreshMainStageWithExplanation(e1, true, "Upload");
             }
             stage.close();
 
