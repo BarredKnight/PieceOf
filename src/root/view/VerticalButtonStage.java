@@ -58,8 +58,9 @@ public class VerticalButtonStage {
         Button extrDirButton = new Button("Directory");
 
         extrFileButton.setOnAction( e -> {
-            ExtractStage.callForFile();
             stage.close();
+            ExtractStage.callForFile();
+
         });
         extrDirButton.setOnAction( e-> {
             ExtractStage.callForDir();

@@ -25,6 +25,7 @@ public class ExtractStage {
 
     private static TextField fromField = new TextField("Path to extracting file");
     private static TextField toField = new TextField("Path to destination");
+    private static TextField nameOfTheRepo = new TextField("");
     private static Button openFromChooser = new Button("...");
     private static Button openToChooser = new Button("...");
     private static FileChooser fromFileChooser = new FileChooser();
@@ -34,10 +35,11 @@ public class ExtractStage {
     private static Button okButton = new Button("Ok");
     private static Button cancelButton = new Button("Cancel");
     private static ToggleButton inclusiveButton = new ToggleButton("With root");
+    private static ToggleButton extractRepo = new ToggleButton("Whole repo");
 
     private static HBox hBox1 = new HBox(fromField, openFromChooser);
     private static HBox hBox2 = new HBox(toField, openToChooser);
-    private static HBox hBox3 = new HBox(statusLabel, okButton, cancelButton);
+    private static HBox hBox3 = new HBox(statusLabel, okButton, cancelButton, extractRepo);
     private static VBox vBox = new VBox(hBox1, hBox2, hBox3);
 
     private static Scene scene = new Scene(vBox);
@@ -88,7 +90,6 @@ public class ExtractStage {
     }
 
     public  static void callForDir(){
-
         File currentRepo = new File(CLI.config.wayToRepos + "/" + CLI.tabPane.getSelectionModel().getSelectedItem().getText());
         toChooser.setInitialDirectory(currentRepo);
         toField.setText(currentRepo.getAbsolutePath());
@@ -102,7 +103,9 @@ public class ExtractStage {
         openFromChooser.setOnAction( e -> {
             File dirFromChooser = fromDirChooser.showDialog(new Stage());
             fromField.setText(dirFromChooser.getAbsolutePath());
-
+            if (extractRepo.isSelected()){
+                nameOfTheRepo.setText(getRightNameOfFutureRepo());
+            }
             File correctDir = substitude(toField.getText(), dirFromChooser.getName());
             toField.setText(correctDir.getAbsolutePath());
         });
@@ -110,6 +113,15 @@ public class ExtractStage {
             File dirFromChooser = toChooser.showDialog(new Stage());
             File correctFile = substitude(dirFromChooser.getAbsolutePath(), new File(fromField.getText()).getName());
             toField.setText(correctFile.getAbsolutePath());
+        });
+
+        extractRepo.setOnAction( e -> {
+            if (!extractRepo.isSelected()){
+                makeExtractWindow();
+            }else{
+                makeRepoExtractWindow();
+            }
+
         });
         okButton.setOnAction( e -> {
             try {
@@ -120,6 +132,8 @@ public class ExtractStage {
             CLI.refreshMainStage("Extracted successfully.");
             stage.close();
         });
+
+
         cancelButton.setOnAction( e -> stage.close());
         stage.showAndWait();
     }
@@ -140,6 +154,36 @@ public class ExtractStage {
         return new File(correctPath);
     }
 
+    private static void makeRepoExtractWindow(){    //We've done it
+        nameOfTheRepo.setText(getRightNameOfFutureRepo());
+        vBox = new VBox(hBox1, nameOfTheRepo, hBox3);
+        stage.close();
+        stage = new Stage();
+        refreshGUI();
+        callForDir();
+    }
+
+    private static void makeExtractWindow(){
+        vBox = new VBox(hBox1, new HBox(toField, openToChooser), hBox3);
+        stage.close();
+        refreshGUI();
+        callForDir();
+    }
+
+    private static void refreshGUI(){
+        scene = new Scene(vBox);
+        stage.setScene(scene);
+    }
+
+    private static String getRightNameOfFutureRepo(){
+        File sourcePath = new File(fromField.getText());
+        if (sourcePath.exists()) {
+            String incorrectName = sourcePath.getName();
+            String correctName = TolerableHelper.getRight(incorrectName);
+            return correctName;
+        }
+        return null;
+    }
 }
 
 

@@ -82,7 +82,7 @@ public class CLI extends Application{
 
         HBox hBox1 = new HBox(newButton, openButton);
         HBox hBox2 = new HBox(upButton, downButton);
-        VBox vBox1 = new VBox(hBox1, hBox2, extractButton, CLI.statusLabel, logButton);
+        VBox vBox1 = new VBox(hBox1, hBox2, new HBox(extractButton, extractRepoButton), CLI.statusLabel, logButton);
         vBox1.maxWidth(200);
         primaryStage.setMinWidth(900);
         layout.getItems().addAll(tabPane, vBox1);
